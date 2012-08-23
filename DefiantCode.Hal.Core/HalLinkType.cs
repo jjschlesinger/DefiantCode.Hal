@@ -9,5 +9,7 @@ namespace DefiantCode.Hal.Core
     public class HalLinkTypes
     {
         public static string Self = "self";
+        public static string Next = "next";
+        public static string Previous = "prev";
     }
 }

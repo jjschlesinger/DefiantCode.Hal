@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefiantCode.Hal.Core", "Def
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefiantCode.Hal.WebApi.Formatters", "DefiantCode.Hal.WebApi.Formatters\DefiantCode.Hal.WebApi.Formatters.csproj", "{93E83047-EE04-4614-A7E7-7C76601CDD17}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{0C765B17-2380-451F-8E28-2CF862E86D24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HalRestApiExample", "Examples\HalRestApiExample\HalRestApiExample.csproj", "{CD1AE0D5-75A6-4A03-A178-C6081A4F3CCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,8 +23,15 @@ Global
 		{93E83047-EE04-4614-A7E7-7C76601CDD17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93E83047-EE04-4614-A7E7-7C76601CDD17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93E83047-EE04-4614-A7E7-7C76601CDD17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD1AE0D5-75A6-4A03-A178-C6081A4F3CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD1AE0D5-75A6-4A03-A178-C6081A4F3CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD1AE0D5-75A6-4A03-A178-C6081A4F3CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD1AE0D5-75A6-4A03-A178-C6081A4F3CCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CD1AE0D5-75A6-4A03-A178-C6081A4F3CCB} = {0C765B17-2380-451F-8E28-2CF862E86D24}
 	EndGlobalSection
 EndGlobal
