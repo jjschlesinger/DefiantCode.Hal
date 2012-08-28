@@ -17,7 +17,8 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/hal+json"));
         }
 
-        public HalJsonFormatter(IEnumerable<string> customMediaTypes) : this()
+        public HalJsonFormatter(IEnumerable<string> customMediaTypes)
+            : this()
         {
             foreach (var mediaType in customMediaTypes)
             {
@@ -28,39 +29,15 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
         public override System.Threading.Tasks.Task WriteToStreamAsync(Type type, object value, System.IO.Stream stream, System.Net.Http.Headers.HttpContentHeaders contentHeaders, System.Net.TransportContext transportContext)
         {
             var attributes = value.GetType().GetCustomAttributes(true);
-            if (attributes.Any(x => x is HalResourceCollectionAttribute || x is HalResourceAttribute))
+            if (attributes.Any(x => x is HalResourceAttribute))
             {
-                IEnumerable<HalLink> halLinks = null;
-                var lpName = "Links";
-                var lp = value.GetType().GetProperties().Where(x => x.GetCustomAttributes(true).Any(x2 => x2 is HalLinksAttribute)).FirstOrDefault();
-                if (lp == null)
-                    lp = value.GetType().GetProperty(lpName);
-
-                if (lp != null)
-                    halLinks = lp.GetValue(value) as IEnumerable<HalLink>;
-
-                lpName = lp != null ? lp.Name : lpName;
-
-                if (attributes.Any(x => x is HalResourceCollectionAttribute))
-                {
-                    PropertyInfo collectionProperty;
-                    collectionProperty = value.GetType().GetProperties().Where(x => x.GetCustomAttributes(true).Any(x2 => x2 is HalEmbeddedResourceCollectionAttribute)).FirstOrDefault();
-                    if (collectionProperty == null)
-                    {
-                        //find first property that is IEnumerable to use as the collection (skip Links)
-                        collectionProperty = value.GetType().GetProperties().Where(x => x.Name != lpName && x.PropertyType.GetInterface("IEnumerable") != null).FirstOrDefault();
-                        if (collectionProperty == null)
-                            throw new Exception("couldn't find a usable property for the resource collection");
-                    }
-                    var collection = collectionProperty.GetValue(value) as IEnumerable<object>;
-                    var results = new HalJsonResourceCollection(halLinks, collection, collectionProperty);
-                    return base.WriteToStreamAsync(results.GetType(), results, stream, contentHeaders, transportContext);
-                }
-                else
-                {
-                    var result = new HalJsonResource(value);
-                    return base.WriteToStreamAsync(result.GetType(), result, stream, contentHeaders, transportContext);
-                }
+                var result = new HalJsonResource(value);
+                return base.WriteToStreamAsync(result.GetType(), result, stream, contentHeaders, transportContext);
+            }
+            else if (attributes.Any(x => x is HalResourceCollectionAttribute))
+            {
+                var results = new HalJsonResourceCollection(value);
+                return base.WriteToStreamAsync(results.GetType(), results, stream, contentHeaders, transportContext);
             }
             else if (value.GetType().IsArray)
             {

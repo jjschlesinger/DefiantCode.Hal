@@ -16,7 +16,38 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
 
         private List<IDictionary<string, object>> _items = new List<IDictionary<string, object>>();
 
+        public HalJsonResourceCollection(object value)
+        {
+            IEnumerable<HalLink> halLinks = null;
+            var lpName = "Links";
+            var lp = value.GetType().GetProperties().Where(x => x.GetCustomAttributes(true).Any(x2 => x2 is HalLinksAttribute)).FirstOrDefault();
+            if (lp == null)
+                lp = value.GetType().GetProperty(lpName);
+
+            if (lp != null)
+                halLinks = lp.GetValue(value) as IEnumerable<HalLink>;
+
+            lpName = lp != null ? lp.Name : lpName;
+
+            PropertyInfo collectionProperty;
+            collectionProperty = value.GetType().GetProperties().Where(x => x.GetCustomAttributes(true).Any(x2 => x2 is HalEmbeddedResourceCollectionAttribute)).FirstOrDefault();
+            if (collectionProperty == null)
+            {
+                //find first property that is IEnumerable to use as the collection (skip Links)
+                collectionProperty = value.GetType().GetProperties().Where(x => x.Name != lpName && x.PropertyType.GetInterface("IEnumerable") != null).FirstOrDefault();
+                if (collectionProperty == null)
+                    throw new Exception("couldn't find a usable property for the resource collection");
+            }
+            var collection = collectionProperty.GetValue(value) as IEnumerable<object>;
+            BuildResourceCollection(halLinks, collection, collectionProperty);
+        }
+
         public HalJsonResourceCollection(IEnumerable<HalLink> links, IEnumerable<object> items, PropertyInfo collectionProperty)
+        {
+            BuildResourceCollection(links, items, collectionProperty);
+        }
+
+        private void BuildResourceCollection(IEnumerable<HalLink> links, IEnumerable<object> items, PropertyInfo collectionProperty)
         {
             Embedded = new Dictionary<string, object>();
             string collectionName = null;

@@ -18,16 +18,17 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
             Type t = obj.GetType();
             foreach (var p in t.GetProperties())
             {
+                var propValue = p.GetValue(obj);
                 var customAttributes = p.GetCustomAttributes(true);
-                if (p.GetValue(obj) is IEnumerable<HalLink> || customAttributes.Any(x => x is HalLinksAttribute))
+                if (customAttributes.Any(x => x is HalLinksAttribute) || propValue is IEnumerable<HalLink>)
                 {
-                    if (p.GetValue(obj) != null)
-                        Add("_links", ((IEnumerable<HalLink>)p.GetValue(obj)).AsDictionary());
+                    if (propValue != null)
+                        Add("_links", ((IEnumerable<HalLink>)propValue).AsDictionary());
                 }
                 else if (customAttributes.Any(x => x is HalEmbeddedResourceAttribute))
                 {
                     bool keyExists;
-                    var embedded = ProcessEmbeddedResource(p, obj, out keyExists);
+                    var embedded = ProcessEmbeddedResource(p.Name, propValue, obj, out keyExists);
 
                     if (!keyExists)
                         Add("_embedded", embedded);
@@ -36,12 +37,12 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
                 }
                 else
                 {
-                    Add(p.Name, p.GetValue(obj));
+                    Add(p.Name, propValue);
                 }
             }
         }
 
-        private Dictionary<string, object> ProcessEmbeddedResource(PropertyInfo p, object obj, out bool keyExists)
+        private Dictionary<string, object> ProcessEmbeddedResource(string propName, object propValue, object obj, out bool keyExists)
         {
             object val;
             Dictionary<string, object> embedded;
@@ -51,7 +52,7 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
             else
                 embedded = new Dictionary<string, object>();
 
-            embedded.Add(p.Name, ObjectToDictionary(p.GetValue(obj)));
+            embedded.Add(propName, ObjectToDictionary(propValue));
             return embedded;
         }
 
