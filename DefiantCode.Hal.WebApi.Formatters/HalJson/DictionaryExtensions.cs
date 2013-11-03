@@ -19,7 +19,7 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
                 if (l.Title != null)
                     linkObject.Add("title", l.Title);
 
-                dict.Add(l.Name, linkObject);
+                dict.Add(l.Rel, linkObject);
             }
 
             return dict;

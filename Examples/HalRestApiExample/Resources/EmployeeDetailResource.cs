@@ -5,11 +5,8 @@ using DefiantCode.Hal.Core;
 
 namespace HalRestApiExample.Resources
 {
-    [HalResource]
-    public class EmployeeDetailResource
+    public class EmployeeDetailResource : BaseResource
     {
-        public List<HalLink> Links { get; set; }
-
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -20,13 +17,12 @@ namespace HalRestApiExample.Resources
 
         public EmployeeDetailResource()
         {
-            Links = new List<HalLink>();
+            Links = new HashSet<HalLink>();
         }
 
-        public EmployeeDetailResource(string selfHref)
-            : this()
+        public EmployeeDetailResource(string selfHref) : this()
         {
-            Links.Add(new HalLink(HalLinkTypes.Self, selfHref));
+            AddSelfLink(selfHref);
         }
     }
 }

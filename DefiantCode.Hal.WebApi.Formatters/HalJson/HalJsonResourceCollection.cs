@@ -87,8 +87,7 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
                     }
                     else
                         item.Add(key, value);
-
-                    
+                                        
                 }
 
                 _items.Add(item);

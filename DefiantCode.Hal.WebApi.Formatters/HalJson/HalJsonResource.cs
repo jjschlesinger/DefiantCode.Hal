@@ -20,7 +20,7 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
             {
                 var propValue = p.GetValue(obj);
                 var customAttributes = p.GetCustomAttributes(true);
-                if (customAttributes.Any(x => x is HalLinksAttribute) || propValue is IEnumerable<HalLink>)
+                if (propValue is IEnumerable<HalLink>)
                 {
                     if (propValue != null)
                         Add("_links", ((IEnumerable<HalLink>)propValue).AsDictionary());
@@ -62,14 +62,15 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalJson
             Type t = obj.GetType();
             foreach (var p in t.GetProperties())
             {
-                var customAttributes = p.GetCustomAttributes(true);
-                if (p.GetValue(obj) is IEnumerable<HalLink> || customAttributes.Any(x => x is HalLinksAttribute))
+                var propValue = p.GetValue(obj);
+                //var customAttributes = p.GetCustomAttributes(true);
+                if (propValue is IEnumerable<HalLink>)
                 {
                     dict.Add("_links", ((IEnumerable<HalLink>)p.GetValue(obj)).AsDictionary());
                 }
                 else
                 {
-                    dict.Add(p.Name, p.GetValue(obj));
+                    dict.Add(p.Name, propValue);
                 }
             }
 

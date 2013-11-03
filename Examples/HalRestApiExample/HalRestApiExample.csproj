@@ -88,6 +88,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\BaseResource.cs" />
     <Compile Include="Resources\EmployeeDetailResource.cs" />
     <Compile Include="Resources\EmployeeResultsResource.cs" />
     <Compile Include="Resources\EmployeeSummaryResource.cs" />

@@ -24,7 +24,7 @@ namespace DefiantCode.Hal.WebApi.Formatters.HalXml
                     var links = p.GetValue(obj) as IEnumerable<HalLink>;
                     foreach (var link in links)
                     {
-                        if (link.Name == HalLinkTypes.Self)
+                        if (link.Rel == HalLinkTypes.Self)
                             xml.Add(new XAttribute("href", link.Href));
                             
                     }
